@@ -60,8 +60,13 @@ public class Main extends Application {
         btnLogin.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                if(txtID.getText() .equals("admin") && passwd.getText() .equals("12345")){
-                    stage.setTitle("Welcome Page");
+                if(txtID.getText() .equals("admin") && passwd.getText() .equals("12345")) {
+                    try {
+                        Menu.start(stage);
+                    } catch (IOException e) {
+                        System.out.println(e);
+                    }
+                    stage.setTitle("Main Menu");
                     stage.setScene(mainMenu);
                     stage.show();
                 } else {

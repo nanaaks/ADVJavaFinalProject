@@ -22,8 +22,7 @@ public class Menu {
         return mainMenu;
     }
 
-    public void start(Stage stage) throws IOException {
-
+    public static void start(Stage stage) throws IOException {
         //Create UI Controls
         Label lblTitle = new Label("Welcome");
         Button btnLogout = new Button("Logout");
