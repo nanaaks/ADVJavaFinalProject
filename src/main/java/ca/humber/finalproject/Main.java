@@ -12,7 +12,6 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
@@ -27,10 +26,7 @@ public class Main extends Application {
         ServiceRegistry reg = new StandardServiceRegistryBuilder().applySettings(conf.getProperties()).build();
         */
 
-        //Login Scene
-        Button btnLogin = new Button("Login");
-        Button btnClear = new Button("Clear");
-        Button btnExit = new Button("Exit");
+        //Create UI controls
         Label errMsg = new Label("Invalid username/password!");
         errMsg.setVisible(false);
         Label lblID = new Label("Username:");
@@ -39,8 +35,10 @@ public class Main extends Application {
         PasswordField passwd = new PasswordField();
         txtID.setPromptText("Enter username");
         passwd.setPromptText("Enter password");
-        HBox buttons = new HBox();
-        buttons.getChildren().addAll(btnLogin, btnExit, btnClear);
+        Button btnLogin = new Button("Login");
+        Button btnExit = new Button("Exit");
+        HBox buttons = new HBox(65);
+        buttons.getChildren().addAll(btnLogin, btnExit);
 
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
@@ -54,8 +52,6 @@ public class Main extends Application {
         grid.add(txtID, 1,1);
         grid.add(passwd, 1,2);
         grid.add(buttons, 1, 3);
-
-        //Scene mainMenu = Menu.getScene();
 
         btnLogin.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -82,15 +78,7 @@ public class Main extends Application {
             }
         });
 
-        btnClear.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                txtID.setText("");
-                passwd.setText("");
-            }
-        });
-
-        Scene loginScene = new Scene(grid, 250, 250);
+        Scene loginScene = new Scene(grid, 300, 200);
         stage.setTitle("Login");
         stage.setScene(loginScene);
         stage.show();

@@ -15,10 +15,11 @@ public class Menu {
     public static void start(Stage stage) throws IOException {
         //Create UI Controls
         Label lblTitle = new Label("Welcome");
+        Button btnVehicles = new Button("Vehicle Registration");
         Button btnLogout = new Button("Logout");
-        VBox pane = new VBox();
-        pane.getChildren().addAll(lblTitle, btnLogout);
-        Scene mainMenu = new Scene(pane, 300, 300);
+        VBox menu = new VBox(30);
+        menu.getChildren().addAll(lblTitle, btnVehicles, btnLogout);
+        Scene mainMenu = new Scene(menu, 300, 300);
         stage.setTitle("Main Menu");
         stage.setScene(mainMenu);
         stage.show();
