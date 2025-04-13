@@ -55,7 +55,7 @@ public class Main extends Application {
         grid.add(passwd, 1,2);
         grid.add(buttons, 1, 3);
 
-        Scene mainMenu = Menu.getScene();
+        //Scene mainMenu = Menu.getScene();
 
         btnLogin.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -64,14 +64,13 @@ public class Main extends Application {
                     try {
                         Menu.start(stage);
                     } catch (IOException e) {
-                        System.out.println(e);
+                        throw new RuntimeException(e);
                     }
-                    stage.setTitle("Main Menu");
-                    stage.setScene(mainMenu);
-                    stage.show();
                 } else {
                     errMsg.setTextFill(Color.RED);
                     errMsg.setVisible(true);
+                    txtID.setText("");
+                    passwd.setText("");
                 }
             }
         });
