@@ -10,17 +10,17 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class Menu {
+public class VehicleForm {
 
     public static void start(Stage stage) throws IOException {
         //Create UI Controls
-        Label lblTitle = new Label("Welcome");
-        Button btnVehicles = new Button("Vehicle Registration");
+        Label lblTitle = new Label("Vehicle Registration");
+        Button btnVehicles = new Button("Register");
         Button btnLogout = new Button("Logout");
         VBox menu = new VBox(30);
         menu.getChildren().addAll(lblTitle, btnVehicles, btnLogout);
         Scene mainMenu = new Scene(menu, 300, 300);
-        stage.setTitle("Main Menu");
+        stage.setTitle("Vehicle Registration");
         stage.setScene(mainMenu);
         stage.show();
 
