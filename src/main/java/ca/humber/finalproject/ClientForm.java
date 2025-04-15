@@ -9,16 +9,30 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.service.ServiceRegistry;
 import java.io.IOException;
 
 public class ClientForm {
 
     public static void start(Stage stage) throws IOException {
+
+        // Create Hibernate SessionFactory
+        Configuration conf = new Configuration().configure().addAnnotatedClass(Vehicle.class);
+        ServiceRegistry reg = new StandardServiceRegistryBuilder().applySettings(conf.getProperties()).build();
+        SessionFactory sFact = conf.buildSessionFactory(reg);
+        Session session = sFact.openSession();
+
         //Create UI Controls
         Label lblTitle = new Label("Welcome, " + "admin");
+        Label msgAdd = new Label("Vehicle Added!");
+        msgAdd.setVisible(false);
         Label lblVIN = new Label("VIN:");
         Label lblMake = new Label("Make:");
         Label lblModel = new Label("Model:");
@@ -49,6 +63,7 @@ public class ClientForm {
         grid.add(lblYear, 0, 4);
         grid.add(lblMileage, 0, 5);
         grid.add(lblPlate, 0, 6);
+        grid.add(msgAdd, 1,0, 4,1);
         grid.add(txtVIN, 1, 1);
         grid.add(txtMake, 1, 2);
         grid.add(txtModel, 1, 3);
@@ -64,6 +79,24 @@ public class ClientForm {
         stage.setTitle("Vehicle Registration");
         stage.setScene(mainMenu);
         stage.show();
+
+        btnRegister.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                Transaction trs = session.beginTransaction();
+                int vin = Integer.parseInt(txtVIN.getText());;
+                String make = txtMake.getText();
+                String model = txtModel.getText();
+                int year = Integer.parseInt(txtYear.getText());;
+                double mileage = Double.parseDouble(txtMileage.getText());
+                String plate = txtPlate.getText();
+                Vehicle vehicle = new Vehicle(vin, make, model, year, mileage, plate);
+                session.persist(vehicle);
+                trs.commit();
+                msgAdd.setTextFill(Color.GREEN);
+                msgAdd.setVisible(true);
+            }
+        });
 
         btnLogout.setOnAction(new EventHandler<ActionEvent>() {
             @Override

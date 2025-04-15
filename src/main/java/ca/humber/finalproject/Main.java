@@ -21,10 +21,6 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        /*Create Hibernate SessionFactory
-        Configuration conf = new Configuration().configure().addAnnotatedClass(User.class);
-        ServiceRegistry reg = new StandardServiceRegistryBuilder().applySettings(conf.getProperties()).build();
-        */
 
         //Create UI controls
         Label errMsg = new Label("Invalid username/password!");
