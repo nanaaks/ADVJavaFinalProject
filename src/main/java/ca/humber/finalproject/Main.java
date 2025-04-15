@@ -64,7 +64,7 @@ public class Main extends Application {
                 if(txtID.getText().equals("admin") && passwd.getText().equals("12345")) {
                     try {
                         if (txtUser.getText().equals("Client")) {
-                            VehicleForm.start(stage);
+                            ClientForm.start(stage);
                         } else if(txtUser.getText().equals("Technician")) {
 
                         } else {
