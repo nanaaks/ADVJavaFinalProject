@@ -29,10 +29,13 @@ public class Main extends Application {
         //Create UI controls
         Label errMsg = new Label("Invalid username/password!");
         errMsg.setVisible(false);
+        Label lblUser = new Label("User:");
         Label lblID = new Label("Username:");
         Label lblPass = new Label("Password:");
+        TextField txtUser = new TextField();
         TextField txtID = new TextField();
         PasswordField passwd = new PasswordField();
+        txtUser.setPromptText("Client or Technician");
         txtID.setPromptText("Enter username");
         passwd.setPromptText("Enter password");
         Button btnLogin = new Button("Login");
@@ -47,18 +50,26 @@ public class Main extends Application {
         grid.setPadding(new Insets(25, 25, 25, 25));
         grid.setGridLinesVisible(false);
         grid.add(errMsg, 0,0, 4,1);
-        grid.add(lblID, 0, 1);
-        grid.add(lblPass, 0, 2);
-        grid.add(txtID, 1,1);
-        grid.add(passwd, 1,2);
-        grid.add(buttons, 1, 3);
+        grid.add(lblUser, 0, 1);
+        grid.add(lblID, 0, 2);
+        grid.add(lblPass, 0, 3);
+        grid.add(txtUser, 1,1);
+        grid.add(txtID, 1,2);
+        grid.add(passwd, 1,3);
+        grid.add(buttons, 1, 4);
 
         btnLogin.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                if(txtID.getText() .equals("admin") && passwd.getText() .equals("12345")) {
+                if(txtID.getText().equals("admin") && passwd.getText().equals("12345")) {
                     try {
-                        Menu.start(stage);
+                        if (txtUser.getText().equals("Client")) {
+                            Menu.start(stage);
+                        } else if(txtUser.getText().equals("Technician")) {
+
+                        } else {
+
+                        }
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
@@ -78,7 +89,7 @@ public class Main extends Application {
             }
         });
 
-        Scene loginScene = new Scene(grid, 300, 200);
+        Scene loginScene = new Scene(grid, 300, 300);
         stage.setTitle("Login");
         stage.setScene(loginScene);
         stage.show();
