@@ -46,6 +46,7 @@ public class ClientForm {
         TextField txtMileage = new TextField();
         TextField txtPlate = new TextField();
         Button btnRegister = new Button("Register a New Vehicle");
+        Button btnClear = new Button("Clear");
         Button btnMaintain = new Button("View Maintenance History");
         Button btnSchedule = new Button("Schedule Appointments");
         Button btnLogout = new Button("Logout");
@@ -70,14 +71,15 @@ public class ClientForm {
         grid.add(txtYear,1, 4);
         grid.add(txtMileage,1, 5);
         grid.add(txtPlate,1, 6);
-        grid.add(btnRegister, 0, 7);
-        grid.add(btnMaintain, 1,7);
-        grid.add(btnSchedule, 2, 7);
+        grid.add(btnRegister, 1, 7);
+        grid.add(btnClear, 2, 7);
+        grid.add(btnMaintain, 2,1);
+        grid.add(btnSchedule, 2, 2);
         grid.add(btnLogout, 2, 0);
 
-        Scene mainMenu = new Scene(grid, 550, 350);
-        stage.setTitle("Vehicle Registration");
-        stage.setScene(mainMenu);
+        Scene clientForm = new Scene(grid, 550, 350);
+        stage.setTitle("Client");
+        stage.setScene(clientForm);
         stage.show();
 
         btnRegister.setOnAction(new EventHandler<ActionEvent>() {
@@ -95,6 +97,19 @@ public class ClientForm {
                 trs.commit();
                 msgAdd.setTextFill(Color.GREEN);
                 msgAdd.setVisible(true);
+            }
+        });
+
+        btnClear.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                txtVIN.clear();
+                txtMake.clear();
+                txtModel.clear();
+                txtYear.clear();
+                txtMileage.clear();
+                txtPlate.clear();
+                msgAdd.setVisible(false);
             }
         });
 

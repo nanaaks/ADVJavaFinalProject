@@ -6,10 +6,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
@@ -29,6 +26,9 @@ public class Main extends Application {
         Label lblID = new Label("Username:");
         Label lblPass = new Label("Password:");
         TextField txtUser = new TextField();
+        ChoiceBox<String> cboxUsers = new ChoiceBox<>();
+        cboxUsers.getItems().addAll("Client", "Technician", "Administrator");
+        cboxUsers.setValue("Client"); // default selection
         TextField txtID = new TextField();
         PasswordField passwd = new PasswordField();
         txtUser.setPromptText("Client or Technician");
@@ -49,7 +49,7 @@ public class Main extends Application {
         grid.add(lblUser, 0, 1);
         grid.add(lblID, 0, 2);
         grid.add(lblPass, 0, 3);
-        grid.add(txtUser, 1,1);
+        grid.add(cboxUsers, 1,1);
         grid.add(txtID, 1,2);
         grid.add(passwd, 1,3);
         grid.add(buttons, 1, 4);
@@ -57,14 +57,15 @@ public class Main extends Application {
         btnLogin.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
+                String user = cboxUsers.getValue();
                 if(txtID.getText().equals("admin") && passwd.getText().equals("12345")) {
                     try {
-                        if (txtUser.getText().equals("Client")) {
+                        if (user.equals("Client")) {
                             ClientForm.start(stage);
-                        } else if(txtUser.getText().equals("Technician")) {
-
+                        } else if(user.equals("Technician")) {
+                            TechForm.start(stage);
                         } else {
-
+                            //AdminForm.start(stage);
                         }
                     } catch (IOException e) {
                         throw new RuntimeException(e);
