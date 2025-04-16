@@ -16,11 +16,12 @@ public class Service {
     private double cost;
     private String status;
     private String name;
+    private String station;
 
     public Service() {
     }
 
-    public Service(int id, int vin, String type, LocalDate date, double cost, String status, String name) {
+    public Service(int id, int vin, String type, LocalDate date, double cost, String status, String name, String station) {
         this.id = id;
         this.vin = vin;
         this.type = type;
@@ -28,6 +29,7 @@ public class Service {
         this.cost = cost;
         this.status = status;
         this.name = name;
+        this.station = station;
     }
 
     public int getId() {
@@ -96,6 +98,7 @@ public class Service {
                 ", cost=" + cost +
                 ", status='" + status + '\'' +
                 ", name='" + name + '\'' +
+                ", station='" + station + '\'' +
                 '}';
     }
 }

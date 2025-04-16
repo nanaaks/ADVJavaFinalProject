@@ -32,9 +32,7 @@ public class AdminForm {
 
         TextField txtID = new TextField();
 
-        Button btnNewClient = new Button("Add New Client");
-        Button btnNewTech = new Button("Add New Technician");
-        Button btnNewAdmin = new Button("Add New Administrator");
+        Button btnNewUser = new Button("Add New User");
         Button btnTechnician = new Button("Technician Activity Report");
         Button btnService = new Button("Service Reports");
         Button btnLogout = new Button("Logout");
@@ -55,15 +53,24 @@ public class AdminForm {
         grid.add(txtArea, 0, 3, 3, 1);
         GridPane.setHalignment(txtArea, HPos.CENTER);
         grid.add(btnService, 2, 2);
-        grid.add(btnNewClient, 0, 4);
-        grid.add(btnNewTech, 1, 4);
-        grid.add(btnNewAdmin, 2, 4);
+        grid.add(btnNewUser, 0, 4);
         grid.add(btnLogout, 2, 0);
 
         Scene techForm = new Scene(grid, 550, 350);
-        stage.setTitle("Technician");
+        stage.setTitle("Administrator");
         stage.setScene(techForm);
         stage.show();
+
+        btnNewUser.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                try {
+                    AddUser.start(stage);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
 
         btnLogout.setOnAction(new EventHandler<ActionEvent>() {
             @Override

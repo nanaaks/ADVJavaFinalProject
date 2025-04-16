@@ -13,17 +13,19 @@ public class Vehicle {
     private int year;
     private double mileage;
     private String plate;
+    private String owner;
 
     public Vehicle() {
     }
 
-    public Vehicle(int vin, String make, String model, int year, double mileage, String plate) {
+    public Vehicle(int vin, String make, String model, int year, double mileage, String plate, String owner) {
         this.vin = vin;
         this.make = make;
         this.model = model;
         this.year = year;
         this.mileage = mileage;
         this.plate = plate;
+        this.owner = owner;
     }
 
     public int getVin() {
@@ -74,6 +76,14 @@ public class Vehicle {
         this.plate = plate;
     }
 
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
+
     @Override
     public String toString() {
         return "Vehicle{" +
@@ -83,6 +93,7 @@ public class Vehicle {
                 ", year=" + year +
                 ", mileage=" + mileage +
                 ", plate='" + plate + '\'' +
+                ", owner='" + plate + '\'' +
                 '}';
     }
 }

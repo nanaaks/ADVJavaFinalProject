@@ -21,7 +21,7 @@ import java.io.IOException;
 
 public class ClientForm {
 
-    public static void start(Stage stage) throws IOException {
+    public static void start(Stage stage, String client) throws IOException {
 
         // Create Hibernate SessionFactory
         Configuration conf = new Configuration().configure().addAnnotatedClass(Vehicle.class);
@@ -92,7 +92,8 @@ public class ClientForm {
                 int year = Integer.parseInt(txtYear.getText());;
                 double mileage = Double.parseDouble(txtMileage.getText());
                 String plate = txtPlate.getText();
-                Vehicle vehicle = new Vehicle(vin, make, model, year, mileage, plate);
+                String owner = client;
+                Vehicle vehicle = new Vehicle(vin, make, model, year, mileage, plate, owner);
                 session.persist(vehicle);
                 trs.commit();
                 msgAdd.setTextFill(Color.GREEN);

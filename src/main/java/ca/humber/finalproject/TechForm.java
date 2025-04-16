@@ -42,6 +42,10 @@ public class TechForm {
         Label lblCost = new Label("Cost:");
         Label lblStatus = new Label("Status:");
         Label lblName = new Label("Technician Name:");
+        Label lblStation = new Label("Service Station:");
+        ChoiceBox<String> cboxStation = new ChoiceBox<>();
+        cboxStation.getItems().addAll("Toronto", "Markham", "Scarborough", "Brampton", "York");
+        cboxStation.setValue("Toronto");
         TextField txtID = new TextField();
         TextField txtVIN = new TextField();
         TextField txtType = new TextField();
@@ -74,6 +78,7 @@ public class TechForm {
         grid.add(lblCost, 0, 5);
         grid.add(lblStatus, 0, 6);
         grid.add(lblName, 0, 7);
+        grid.add(lblStation, 0, 8);
         grid.add(msgAdd, 1,0, 4,1);
         grid.add(txtID, 1, 1);
         grid.add(txtVIN, 1, 2);
@@ -82,13 +87,14 @@ public class TechForm {
         grid.add(txtCost,1, 5);
         grid.add(txtStatus,1, 6);
         grid.add(txtName,1, 7);
-        grid.add(btnLog, 1, 8);
-        grid.add(btnClear, 2, 8);
+        grid.add(cboxStation, 1,8);
+        grid.add(btnLog, 1, 9);
+        grid.add(btnClear, 2, 9);
         grid.add(btnAssigned, 2, 2);
         grid.add(btnUpdate, 2, 3);
         grid.add(btnSchedule, 2, 4);
         grid.add(btnLogout, 2, 0);
-        grid.add(txtArea, 0, 9, 2, 1);
+        grid.add(txtArea, 0, 10, 2, 1);
         GridPane.setHalignment(txtArea, HPos.CENTER);
 
         Scene techForm = new Scene(grid, 600, 600);
@@ -107,7 +113,8 @@ public class TechForm {
                 double cost = Double.parseDouble(txtCost.getText());
                 String status = txtStatus.getText();
                 String name = txtName.getText();
-                Service service = new Service(id, vin, type, date, cost, status, name);
+                String station = cboxStation.getValue();
+                Service service = new Service(id, vin, type, date, cost, status, name, station);
                 session.persist(service);
                 trs.commit();
                 msgAdd.setTextFill(Color.GREEN);
