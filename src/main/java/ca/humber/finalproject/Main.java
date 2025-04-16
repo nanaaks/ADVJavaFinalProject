@@ -28,7 +28,7 @@ public class Main extends Application {
         TextField txtUser = new TextField();
         ChoiceBox<String> cboxUsers = new ChoiceBox<>();
         cboxUsers.getItems().addAll("Client", "Technician", "Administrator");
-        cboxUsers.setValue("Client"); // default selection
+        cboxUsers.setValue("Client");
         TextField txtID = new TextField();
         PasswordField passwd = new PasswordField();
         txtUser.setPromptText("Client or Technician");
@@ -65,7 +65,7 @@ public class Main extends Application {
                         } else if(user.equals("Technician")) {
                             TechForm.start(stage);
                         } else {
-                            //AdminForm.start(stage);
+                            AdminForm.start(stage);
                         }
                     } catch (IOException e) {
                         throw new RuntimeException(e);
