@@ -40,7 +40,9 @@ public class AddUser {
         TextField txtID = new TextField();
         TextField txtPassword = new TextField();
         TextField txtName = new TextField();
-        TextField txtRole = new TextField();
+        ChoiceBox<String> cboxStation = new ChoiceBox<>();
+        cboxStation.getItems().addAll("Administrator", "Technician","Client");
+        cboxStation.setValue("Administrator");
 
         Button btnAdd = new Button("Add User");
         Button btnClear = new Button("Clear");
@@ -60,7 +62,7 @@ public class AddUser {
         grid.add(txtID, 1, 1);
         grid.add(txtPassword, 1, 2);
         grid.add(txtName, 1, 3);
-        grid.add(txtRole,1, 4);
+        grid.add(cboxStation,1, 4);
         grid.add(btnAdd, 0, 5);
         grid.add(btnClear, 1, 5);
         grid.add(btnCancel, 2, 5);
@@ -77,7 +79,7 @@ public class AddUser {
                 String id = txtID.getText();
                 String pass = txtPassword.getText();
                 String name = txtName.getText();
-                String role = txtRole.getText();
+                String role = cboxStation.getValue();
                 User user = new User(id, pass, name, role);
                 session.persist(user);
                 trs.commit();

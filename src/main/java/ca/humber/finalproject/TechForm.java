@@ -30,6 +30,11 @@ public class TechForm {
         SessionFactory sFact = conf.buildSessionFactory(reg);
         Session session = sFact.openSession();
 
+        Configuration conf2 = new Configuration().configure().addAnnotatedClass(Maintenance.class);
+        ServiceRegistry reg2 = new StandardServiceRegistryBuilder().applySettings(conf2.getProperties()).build();
+        SessionFactory sFact2 = conf2.buildSessionFactory(reg2);
+        Session session2 = sFact2.openSession();
+
         //Create UI Controls
         Label lblTitle = new Label("Welcome, " + "admin");
         Label msgAdd = new Label("Service Logged!");
@@ -51,7 +56,9 @@ public class TechForm {
         TextField txtType = new TextField();
         DatePicker datePicker = new DatePicker();
         TextField txtCost = new TextField();
-        TextField txtStatus = new TextField();
+        ChoiceBox<String> cboxStation1 = new ChoiceBox<>();
+        cboxStation1.getItems().addAll("Pending", "In Service", "Completed");
+        cboxStation1.setValue("Pending");
         TextField txtName = new TextField();
 
         Button btnAssigned = new Button("View Assigned Vehicles");
@@ -85,7 +92,7 @@ public class TechForm {
         grid.add(txtType, 1, 3);
         grid.add(datePicker, 1, 4);
         grid.add(txtCost,1, 5);
-        grid.add(txtStatus,1, 6);
+        grid.add(cboxStation1,1, 6);
         grid.add(txtName,1, 7);
         grid.add(cboxStation, 1,8);
         grid.add(btnLog, 1, 9);
@@ -105,18 +112,22 @@ public class TechForm {
         btnLog.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                Transaction trs = session.beginTransaction();
+                Transaction trs1 = session.beginTransaction();
                 int id = Integer.parseInt(txtID.getText());
                 int vin = Integer.parseInt(txtVIN.getText());
                 String type = txtType.getText();
                 LocalDate date = datePicker.getValue();
                 double cost = Double.parseDouble(txtCost.getText());
-                String status = txtStatus.getText();
+                String status = cboxStation1.getValue();
                 String name = txtName.getText();
                 String station = cboxStation.getValue();
                 Service service = new Service(id, vin, type, date, cost, status, name, station);
                 session.persist(service);
-                trs.commit();
+                trs1.commit();
+                Transaction trs2 = session2.beginTransaction();
+                Maintenance maintenance = new Maintenance(vin,type, name,cost,date);
+                session2.persist(maintenance);
+                trs2.commit();
                 msgAdd.setTextFill(Color.GREEN);
                 msgAdd.setVisible(true);
             }
@@ -130,7 +141,6 @@ public class TechForm {
                 txtType.clear();
                 datePicker.setValue(null);
                 txtCost.clear();
-                txtStatus.clear();
                 txtName.clear();
                 msgAdd.setVisible(false);
             }
@@ -147,5 +157,9 @@ public class TechForm {
                 }
             }
         });
+    }
+
+    public void recordMaintenance(){
+        //later
     }
 }

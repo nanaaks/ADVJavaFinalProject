@@ -30,7 +30,7 @@ public class ClientForm {
         Session session = sFact.openSession();
 
         //Create UI Controls
-        Label lblTitle = new Label("Welcome, " + "admin");
+        Label lblTitle = new Label("Welcome, " + "Client");
         Label msgAdd = new Label("Vehicle Added!");
         msgAdd.setVisible(false);
         Label lblVIN = new Label("VIN:");
@@ -111,6 +111,18 @@ public class ClientForm {
                 txtMileage.clear();
                 txtPlate.clear();
                 msgAdd.setVisible(false);
+            }
+        });
+
+        btnSchedule.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                try {
+                    AppointForm appointForm = new AppointForm();
+                    appointForm.start(stage);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 
