@@ -22,6 +22,8 @@ import java.io.IOException;
 
 public class Main extends Application {
 
+    public static String userID;
+
     @Override
     public void start(Stage stage) throws IOException {
 
@@ -63,12 +65,13 @@ public class Main extends Application {
             public void handle(ActionEvent actionEvent) {
                 Transaction trs =  session.beginTransaction();
                 User user = session.get(User.class, txtID.getText());
-                String userID = user.getUserid();
+                userID = user.getUserid();
                 String password = user.getPassword();
                 if(txtID.getText().equals(userID) && passwd.getText().equals(password)) {
                     try {
                         if (user.getRole().equals("Client")) {
                             ClientForm.start(stage, userID);
+
                         } else if(user.getRole().equals("Technician")) {
                             TechForm.start(stage);
                         } else if (user.getRole().equals("Administrator")) {

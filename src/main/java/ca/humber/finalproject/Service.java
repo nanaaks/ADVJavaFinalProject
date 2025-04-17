@@ -88,6 +88,14 @@ public class Service {
         this.name = name;
     }
 
+    public String getStation() {
+        return station;
+    }
+
+    public void setStation(String station) {
+        this.station = station;
+    }
+
     @Override
     public String toString() {
         return "Service{" +

@@ -8,6 +8,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.hibernate.Session;
@@ -22,7 +23,11 @@ import java.time.LocalDate;
 
 public class AppointForm {
 
+    public static String userID;
+
     public static void start(Stage stage) throws IOException {
+
+        userID = Main.userID;
 
         // Create Hibernate SessionFactory
         Configuration conf = new Configuration().configure().addAnnotatedClass(Appointment.class);
@@ -34,30 +39,29 @@ public class AppointForm {
         Label lblTitle = new Label("Welcome, Client");
         Label lblID = new Label("Client ID:");
         Label lblType = new Label("Service Type:");
+        Label lblDate = new Label("Service Date:");
         Label lblStation = new Label("Service Station:");
         Label lblNotes = new Label("Notes:");
-        Label msgAdd = new Label("Service Logged!");
+        Label msgAdd = new Label("Appointment Booked!");
         msgAdd.setVisible(false);
 
         TextField txtID = new TextField();
         TextField txtType = new TextField();
         TextField txtNotes = new TextField();
-        TextField txtName = new TextField();
-
+        DatePicker datePicker = new DatePicker();
         ChoiceBox<String> cboxStation = new ChoiceBox<>();
         cboxStation.getItems().addAll("Toronto", "Markham", "Scarborough", "Brampton", "York");
         cboxStation.setValue("Toronto");
 
 
-        Button btnLog = new Button("Book Appointment");
+        Button btnBook = new Button("Book Appointment");
         Button btnClear = new Button("Clear");
-        Button btnLogout = new Button("Logout");
+        Button btnLogout = new Button("Back");
 
-// === Output Area ===
-        TextArea txtArea = new TextArea();
-        txtArea.setEditable(false);
+        TextArea txtOutput = new TextArea();
+        txtOutput.setEditable(false);
 
-// === Layout ===
+
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
         grid.setHgap(10);
@@ -66,38 +70,55 @@ public class AppointForm {
         grid.setGridLinesVisible(false);
 
 
-        grid.add(lblTitle, 0, 0);
-        grid.add(msgAdd, 1, 0, 4, 1);
+        grid.add(lblTitle, 0, 0, 2, 1);
+        grid.add(msgAdd, 0, 1, 2, 1);
 
-        grid.add(lblID, 0, 1);
-        grid.add(txtID, 1, 1);
+        grid.add(lblID, 0, 2);
+        grid.add(txtID, 1, 2);
 
         grid.add(lblType, 0, 3);
         grid.add(txtType, 1, 3);
 
-        grid.add(lblNotes, 0, 4);
-        grid.add(txtNotes, 1, 4);
+        grid.add(lblDate, 0, 4);
+        grid.add(datePicker, 1, 4);
 
-        grid.add(lblStation, 0, 8);
-        grid.add(cboxStation, 1, 8);
+        grid.add(lblNotes, 0, 5);
+        grid.add(txtNotes, 1, 5);
 
-        grid.add(btnLog, 1, 9);
-        grid.add(btnClear, 2, 9);
+        grid.add(lblStation, 0, 6);
+        grid.add(cboxStation, 1, 6);
+
+        // Buttons aligned horizontally
+        HBox buttons = new HBox(15);
+        buttons.getChildren().addAll(btnBook, btnClear);
+        grid.add(buttons, 1, 7);
+
+// Text output area
+        grid.add(txtOutput, 0, 8, 2, 1);
+        GridPane.setHalignment(txtOutput, HPos.CENTER);
+
+// Logout button top-right
         grid.add(btnLogout, 2, 0);
 
-        grid.add(txtArea, 0, 10, 2, 1);
-        GridPane.setHalignment(txtArea, HPos.CENTER);
-
-
-        Scene techForm = new Scene(grid, 600, 600);
-        stage.setTitle("Technician");
-        stage.setScene(techForm);
+        Scene appoint = new Scene(grid, 600, 600);
+        stage.setTitle("Book an Appointment");
+        stage.setScene(appoint);
         stage.show();
 
-        btnLog.setOnAction(new EventHandler<ActionEvent>() {
+        btnBook.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-
+                Transaction trs = session.beginTransaction();
+                int id = Integer.parseInt(txtID.getText());
+                String type = txtType.getText();
+                String notes = txtType.getText();
+                LocalDate date = datePicker.getValue();
+                String station = cboxStation.getValue();
+                Appointment appointment = new Appointment(id, type, notes, date, station);
+                session.persist(appointment);
+                trs.commit();
+                msgAdd.setTextFill(Color.GREEN);
+                msgAdd.setVisible(true);
             }
         });
 
@@ -107,7 +128,7 @@ public class AppointForm {
                 txtID.clear();
                 txtType.clear();
                 txtNotes.clear();
-                txtName.clear();
+                datePicker.setValue(null);
                 msgAdd.setVisible(false);
             }
         });
@@ -116,8 +137,7 @@ public class AppointForm {
             @Override
             public void handle(ActionEvent actionEvent) {
                 try {
-                    Main login = new Main();
-                    login.start(stage);
+                    ClientForm.start(stage, userID);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }

@@ -15,10 +15,12 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.query.Query;
 import org.hibernate.service.ServiceRegistry;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.List;
 
 public class TechForm {
 
@@ -36,7 +38,7 @@ public class TechForm {
         Session session2 = sFact2.openSession();
 
         //Create UI Controls
-        Label lblTitle = new Label("Welcome, " + "admin");
+        Label lblTitle = new Label("Welcome");
         Label msgAdd = new Label("Service Logged!");
         msgAdd.setVisible(false);
 
@@ -65,7 +67,7 @@ public class TechForm {
         Button btnLog = new Button("Log Maintenance");
         Button btnClear = new Button("Clear");
         Button btnUpdate = new Button("Update Status");
-        Button btnSchedule = new Button("Schedule Maintenance");
+        Button btnSchedule = new Button("Check Reminders");
         Button btnLogout = new Button("Logout");
 
         TextArea txtArea = new TextArea();
@@ -127,9 +129,56 @@ public class TechForm {
                 Transaction trs2 = session2.beginTransaction();
                 Maintenance maintenance = new Maintenance(vin,type, name,cost,date);
                 session2.persist(maintenance);
+                txtArea.setText(maintenance.toString());
                 trs2.commit();
                 msgAdd.setTextFill(Color.GREEN);
                 msgAdd.setVisible(true);
+            }
+        });
+
+        btnAssigned.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                Transaction trs = session.beginTransaction();
+
+                // Search for service records given technician name
+                String target = txtName.getText();
+                String hqlSearch = "FROM Service WHERE name = :target";
+                Query<Service> querySearch = session.createQuery(hqlSearch, Service.class);
+                querySearch.setParameter("target", target);
+                List<Service> records = querySearch.getResultList();
+                if (records.isEmpty()) {
+                    txtArea.appendText("No records found!");
+                } else {
+                    for (Service service : records){
+                        txtArea.appendText("VIN: " + service.getVin() +
+                                "\n\n");
+                    }
+                }
+                trs.commit();
+            }
+        });
+
+
+        btnUpdate.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                try {
+                    UpdateStatus updateStatus = new UpdateStatus();
+                    updateStatus.start(stage);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+
+            }
+        });
+
+
+        btnSchedule.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                ScheduleMaintenance scheduleMaintenance = new ScheduleMaintenance();
+                scheduleMaintenance.start(stage);
             }
         });
 
@@ -143,6 +192,7 @@ public class TechForm {
                 txtCost.clear();
                 txtName.clear();
                 msgAdd.setVisible(false);
+                txtArea.clear();
             }
         });
 
@@ -157,9 +207,5 @@ public class TechForm {
                 }
             }
         });
-    }
-
-    public void recordMaintenance(){
-        //later
     }
 }

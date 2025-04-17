@@ -2,11 +2,13 @@ package ca.humber.finalproject;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
@@ -16,8 +18,10 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.query.Query;
 import org.hibernate.service.ServiceRegistry;
 import java.io.IOException;
+import java.util.List;
 
 public class ClientForm {
 
@@ -28,6 +32,12 @@ public class ClientForm {
         ServiceRegistry reg = new StandardServiceRegistryBuilder().applySettings(conf.getProperties()).build();
         SessionFactory sFact = conf.buildSessionFactory(reg);
         Session session = sFact.openSession();
+
+        // Create Hibernate SessionFactory
+        Configuration conf2 = new Configuration().configure().addAnnotatedClass(Maintenance.class);
+        ServiceRegistry reg2 = new StandardServiceRegistryBuilder().applySettings(conf2.getProperties()).build();
+        SessionFactory sFact2 = conf2.buildSessionFactory(reg2);
+        Session session2 = sFact2.openSession();
 
         //Create UI Controls
         Label lblTitle = new Label("Welcome, " + "Client");
@@ -51,6 +61,9 @@ public class ClientForm {
         Button btnSchedule = new Button("Schedule Appointments");
         Button btnLogout = new Button("Logout");
 
+        TextArea txtArea = new TextArea();
+        txtArea.setEditable(false);
+
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
         grid.setHgap(10);
@@ -73,11 +86,13 @@ public class ClientForm {
         grid.add(txtPlate,1, 6);
         grid.add(btnRegister, 1, 7);
         grid.add(btnClear, 2, 7);
-        grid.add(btnMaintain, 2,1);
-        grid.add(btnSchedule, 2, 2);
+        grid.add(btnSchedule, 2, 1);
+        grid.add(btnMaintain, 2,2);
+        grid.add(txtArea, 2, 3, 1, 4);
+        GridPane.setHalignment(txtArea, HPos.CENTER);
         grid.add(btnLogout, 2, 0);
 
-        Scene clientForm = new Scene(grid, 550, 350);
+        Scene clientForm = new Scene(grid, 800, 550);
         stage.setTitle("Client");
         stage.setScene(clientForm);
         stage.show();
@@ -101,6 +116,29 @@ public class ClientForm {
             }
         });
 
+        btnMaintain.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                Transaction trs = session2.beginTransaction();
+
+                // Search for maintenance records given VIN
+                int target = Integer.parseInt(txtVIN.getText());;
+                String hqlSearch = "FROM Maintenance WHERE vin = :target";
+                Query<Maintenance> querySearch = session2.createQuery(hqlSearch, Maintenance.class);
+                querySearch.setParameter("target", target);
+                List<Maintenance> records = querySearch.getResultList();
+                for (Maintenance maintenance : records){
+                    txtArea.appendText("Service Type: " + maintenance.getServicetype() +
+                            ", Technician: " + maintenance.getTechnicianname() +
+                            ", Cost: " + maintenance.getCost() +
+                            ", Date: " + maintenance.getDate() +
+                            "\n\n");
+                }
+                trs.commit();
+            }
+        });
+
+
         btnClear.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
@@ -118,8 +156,7 @@ public class ClientForm {
             @Override
             public void handle(ActionEvent event) {
                 try {
-                    AppointForm appointForm = new AppointForm();
-                    appointForm.start(stage);
+                    AppointForm.start(stage);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
